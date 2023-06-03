@@ -4,6 +4,7 @@ const {
   createUser,
   getUsersById,
   updateUser,
+  deleteUser,
 } = require("../service/user.service");
 
 router.get("/", async (req, res) => {
@@ -43,6 +44,17 @@ router.put("/:id", async (req, res) => {
     const { id } = req.params;
     const { name, surname, email, pwd } = req.body;
     const data = await updateUser(id, name, surname, email, pwd);
+
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await deleteUser(id);
 
     res.status(200).send(data);
   } catch (error) {
