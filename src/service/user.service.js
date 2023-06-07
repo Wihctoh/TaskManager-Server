@@ -1,15 +1,9 @@
-const {
-  getAllUsersDB,
-  createUserDB,
-  getUsersByIdDB,
-  updateUserDB,
-  deleteUserDB,
-} = require("../repository/user.repository");
+const { getAllUsersDB, createUserDB, getUsersByIdDB, updateUserDB, deleteUserDB } = require('../repository/user.repository');
 
 async function getAllUsers() {
   const data = await getAllUsersDB();
 
-  if (!data.length) throw new Error("no have data!");
+  if (!data.length) throw new Error('no have data!');
 
   return data;
 }
@@ -17,7 +11,7 @@ async function getAllUsers() {
 async function createUser(name, surname, email, pwd) {
   const data = await createUserDB(name, surname, email, pwd);
 
-  if (!data.length) throw new Error("user not created!");
+  if (!data.length) throw new Error('user not created!');
 
   return data;
 }
@@ -25,7 +19,7 @@ async function createUser(name, surname, email, pwd) {
 async function getUsersById(id) {
   const data = await getUsersByIdDB(id);
 
-  if (!data.length) throw new Error("no have data!");
+  if (!data.length) throw new Error('no have data!');
 
   return data;
 }

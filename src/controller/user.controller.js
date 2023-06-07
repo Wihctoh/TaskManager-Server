@@ -1,13 +1,7 @@
-const router = require("express").Router();
-const {
-  getAllUsers,
-  createUser,
-  getUsersById,
-  updateUser,
-  deleteUser,
-} = require("../service/user.service");
+const router = require('express').Router();
+const { getAllUsers, createUser, getUsersById, updateUser, deleteUser } = require('../service/user.service');
 
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const data = await getAllUsers();
 
@@ -17,7 +11,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { name, surname, email, pwd } = req.body;
     const data = await createUser(name, surname, email, pwd);
@@ -28,7 +22,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const data = await getUsersById(id);
@@ -39,7 +33,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { name, surname, email, pwd } = req.body;
@@ -51,7 +45,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const data = await deleteUser(id);

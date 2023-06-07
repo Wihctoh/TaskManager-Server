@@ -1,8 +1,8 @@
-const pool = require("../db");
+const pool = require('../db');
 
 async function getAllUsersDB() {
   const client = await pool.connect();
-  const sql = "select * from	users";
+  const sql = 'select * from	users';
   const data = (await client.query(sql)).rows;
 
   return data;
@@ -10,16 +10,26 @@ async function getAllUsersDB() {
 
 async function createUserDB(name, surname, email, pwd) {
   const client = await pool.connect();
-  const sql =
-    "insert into users (name, surname, email, pwd) values ($1, $2, $3, $4) returning *";
-  const data = (await client.query(sql, [name, surname, email, pwd])).rows;
+  try {
+    await client.query('begin');
 
-  return data;
+    const sql = 'insert into users (name, surname, email, pwd) values ($1, $2, $3, $4) returning *';
+    const data = (await client.query(sql, [name, surname, email, pwd])).rows;
+
+    await client.query('commit');
+
+    return data;
+  } catch (error) {
+    await client.query('rollback');
+    console.log(`createUserDB: ${error.message}`);
+
+    return [];
+  }
 }
 
 async function getUsersByIdDB(id) {
   const client = await pool.connect();
-  const sql = "select * from	users where id = $1";
+  const sql = 'select * from	users where id = $1';
   const data = (await client.query(sql, [id])).rows;
 
   return data;
@@ -27,19 +37,36 @@ async function getUsersByIdDB(id) {
 
 async function updateUserDB(id, name, surname, email, pwd) {
   const client = await pool.connect();
-  const sql =
-    "update users set name = $1, surname = $2, email = $3, pwd = $4 where id = $5 returning *";
-  const data = (await client.query(sql, [name, surname, email, pwd, id])).rows;
+  try {
+    await client.query('begin');
 
-  return data;
+    const sql = 'update users set name = $1, surname = $2, email = $3, pwd = $4 where id = $5 returning *';
+    const data = (await client.query(sql, [name, surname, email, pwd, id])).rows;
+
+    return data;
+  } catch (error) {
+    await client.query('rollback');
+    console.log(`updateUserDB: ${error.message}`);
+
+    return [];
+  }
 }
 
 async function deleteUserDB(id) {
   const client = await pool.connect();
-  const sql = "delete from users where id = $1 returning *";
-  const data = (await client.query(sql, [id])).rows;
+  try {
+    await client.query('begin');
 
-  return data;
+    const sql = 'delete from users where id = $1 returning *';
+    const data = (await client.query(sql, [id])).rows;
+
+    return data;
+  } catch (error) {
+    await client.query('rollback');
+    console.log(`deleteUserDB: ${error.message}`);
+
+    return [];
+  }
 }
 
 module.exports = {
