@@ -52,6 +52,30 @@ async function updateUserDB(id, name, surname, email, pwd) {
   }
 }
 
+async function patchUserDB(id, clientObj) {
+  const client = await pool.connect();
+  try {
+    await client.query('begin');
+
+    const sqlReq = 'select * from users where id = $1';
+    const dataRes = (await client.query(sqlReq, [id])).rows;
+
+    const newObj = { ...dataRes[0], ...clientObj };
+
+    const sqlUpdate = 'update users set name = $1, surname = $2, email = $3, pwd = $4  where id = $5 returning *';
+    const data = (await client.query(sqlUpdate, [newObj.name, newObj.surname, newObj.email, newObj.pwd, id])).rows;
+
+    await client.query('commit');
+
+    return data;
+  } catch (error) {
+    await client.query('rollback');
+    console.log(`patchUser: ${error.message}`);
+
+    return [];
+  }
+}
+
 async function deleteUserDB(id) {
   const client = await pool.connect();
   try {
@@ -75,4 +99,5 @@ module.exports = {
   getUsersByIdDB,
   updateUserDB,
   deleteUserDB,
+  patchUserDB,
 };

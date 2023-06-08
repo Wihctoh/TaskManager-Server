@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const { getAllUsers, createUser, getUsersById, updateUser, deleteUser } = require('../service/user.service');
+const { isValidID, isValidUserBody } = require('../helper/validation');
+const { getAllUsers, createUser, getUsersById, updateUser, patchUser, deleteUser } = require('../service/user.service');
 
 router.get('/', async (req, res) => {
   try {
@@ -11,7 +12,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', isValidUserBody, async (req, res) => {
   try {
     const { name, surname, email, pwd } = req.body;
     const data = await createUser(name, surname, email, pwd);
@@ -22,7 +23,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', isValidID, async (req, res) => {
   try {
     const { id } = req.params;
     const data = await getUsersById(id);
@@ -33,7 +34,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', isValidUserBody, isValidID, async (req, res) => {
   try {
     const { id } = req.params;
     const { name, surname, email, pwd } = req.body;
@@ -45,7 +46,20 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const clientObj = req.body;
+
+    const data = await patchUser(id, clientObj);
+
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
+router.delete('/:id', isValidID, async (req, res) => {
   try {
     const { id } = req.params;
     const data = await deleteUser(id);
