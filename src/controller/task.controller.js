@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const buildResponse = require('../helper/buildResponse');
 const { isValidID, isValidTaskBody } = require('../helper/validation');
 const { getAllTask, createTask, getTaskById, deleteTask, patchTask } = require('../service/task.service');
 
@@ -6,9 +7,9 @@ router.get('/', async (req, res) => {
   try {
     const data = await getAllTask();
 
-    res.status(200).send(data);
+    buildResponse(res, 200, data);
   } catch (error) {
-    res.status(404).send(error.message);
+    buildResponse(res, 404, error.message);
   }
 });
 
@@ -17,9 +18,9 @@ router.get('/:id', isValidID, async (req, res) => {
     const { id } = req.params;
     const data = await getTaskById(id);
 
-    res.status(200).send(data);
+    buildResponse(res, 200, data);
   } catch (error) {
-    res.status(404).send(error.message);
+    buildResponse(res, 404, error.message);
   }
 });
 
@@ -28,9 +29,9 @@ router.post('/', isValidTaskBody, async (req, res) => {
     const { task, user_id } = req.body;
     const data = await createTask(task, user_id);
 
-    res.status(200).send(data);
+    buildResponse(res, 200, data);
   } catch (error) {
-    res.status(404).send(error.message);
+    buildResponse(res, 404, error.message);
   }
 });
 
@@ -39,9 +40,9 @@ router.delete('/:id', isValidID, async (req, res) => {
     const { id } = req.params;
     const data = await deleteTask(id);
 
-    res.status(200).send(data);
+    buildResponse(res, 200, data);
   } catch (error) {
-    res.status(404).send(error.message);
+    buildResponse(res, 404, error.message);
   }
 });
 
@@ -52,9 +53,9 @@ router.patch('/:id', isValidID, async (req, res) => {
 
     const data = await patchTask(id, clientObj);
 
-    res.status(200).send(data);
+    buildResponse(res, 200, data);
   } catch (error) {
-    res.status(404).send(error.message);
+    buildResponse(res, 404, error.message);
   }
 });
 
