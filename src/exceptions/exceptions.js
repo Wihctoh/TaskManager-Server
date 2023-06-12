@@ -30,6 +30,7 @@ const ExceptionType = {
   TASK_USERID_INVALID: 'incorrect user_id',
   TASK_USERID_TOO_SMALL: 'user_id is less than zero',
 
+  API_USER_NOT_FOUND:'user not found!',
   API_PWD_NOT_MATCH:'password not match!'
 };
 

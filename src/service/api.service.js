@@ -7,7 +7,7 @@ const saltround = 10;
 async function createUser(name, surname, email, pwd) {
   const foundUser = await getUserByEmailDB(email);
 
-  if (foundUser.length) throw new Error(ExceptionType.DB_GET_USER_NOT_FOUND);
+  if (foundUser.length) throw new Error(ExceptionType.API_USER_NOT_FOUND);
 
   const hashedPassword = await bcrypc.hash(pwd, saltround);
 
@@ -19,7 +19,7 @@ async function createUser(name, surname, email, pwd) {
 async function authorizationUser(email, pwd) {
   const findUser = await getUserByEmailDB(email);
 
-  if (!findUser.length) throw new Error(ExceptionType.DB_GET_USER_NOT_FOUND);
+  if (!findUser.length) throw new Error(ExceptionType.API_USER_NOT_FOUND);
 
   const bool = await bcrypc.compare(pwd, findUser[0].pwd);
 
